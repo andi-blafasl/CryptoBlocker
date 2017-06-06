@@ -9,29 +9,29 @@ $fileGroupName = "CryptoBlockerGroup"
 $fileTemplateName = "CryptoBlockerTemplate"
 # set screening type to
 # Active screening: Do not allow users to save unathorized files
-$fileTemplateType = "Active"
+#$fileTemplateType = "Active"
 # Passive screening: Allow users to save unathorized files (use for monitoring)
-#$fileTemplateType = "Passiv"
+$fileTemplateType = "Passiv"
 
 # Write the email options to the temporary file - comment out the entire block if no email notification should be set
 $EmailNotification = $env:TEMP + "\tmpEmail001.tmp"
 "Notification=m" >> $EmailNotification
 "To=[Admin Email]" >> $EmailNotification
 ## en
-"Subject=Unauthorized file from the [Violated File Group] file group detected" >> $EmailNotification
-"Message=User [Source Io Owner] attempted to save [Source File Path] to [File Screen Path] on the [Server] server. This file is in the [Violated File Group] file group, which is not permitted on the server."  >> $EmailNotification
+#"Subject=Unauthorized file from the [Violated File Group] file group detected" >> $EmailNotification
+#"Message=User [Source Io Owner] attempted to save [Source File Path] to [File Screen Path] on the [Server] server. This file is in the [Violated File Group] file group, which is not permitted on the server."  >> $EmailNotification
 ## de
-#"Subject=Nicht autorisierte Datei erkannt, die mit Dateigruppe [Violated File Group] übereinstimmt" >> $EmailNotification
-#"Message=Das System hat erkannt, dass Benutzer [Source Io Owner] versucht hat, die Datei [Source File Path] unter [File Screen Path] auf Server [Server] zu speichern. Diese Datei weist Übereinstimmungen mit der Dateigruppe [Violated File Group] auf, die auf dem System nicht zulässig ist."  >> $EmailNotification
+"Subject=Nicht autorisierte Datei erkannt, die mit Dateigruppe [Violated File Group] uebereinstimmt" >> $EmailNotification
+"Message=Das System hat erkannt, dass Benutzer [Source Io Owner] versucht hat, die Datei [Source File Path] unter [File Screen Path] auf Server [Server] zu speichern. Diese Datei weist UEbereinstimmungen mit der Dateigruppe [Violated File Group] auf, die auf dem System nicht zulaessig ist."  >> $EmailNotification
 
 # Write the event log options to the temporary file - comment out the entire block if no event notification should be set
 $EventNotification = $env:TEMP + "\tmpEvent001.tmp"
 "Notification=e" >> $EventNotification
 "EventType=Warning" >> $EventNotification
 ## en
-"Message=User [Source Io Owner] attempted to save [Source File Path] to [File Screen Path] on the [Server] server. This file is in the [Violated File Group] file group, which is not permitted on the server." >> $EventNotification
+#"Message=User [Source Io Owner] attempted to save [Source File Path] to [File Screen Path] on the [Server] server. This file is in the [Violated File Group] file group, which is not permitted on the server." >> $EventNotification
 ## de
-#"Message=Das System hat erkannt, dass Benutzer [Source Io Owner] versucht hat, die Datei [Source File Path] unter [File Screen Path] auf Server [Server] zu speichern. Diese Datei weist Übereinstimmungen mit der Dateigruppe [Violated File Group] auf, die auf dem System nicht zulässig ist." >> $EventNotification
+"Message=Das System hat erkannt, dass Benutzer [Source Io Owner] versucht hat, die Datei [Source File Path] unter [File Screen Path] auf Server [Server] zu speichern. Diese Datei weist UEbereinstimmungen mit der Dateigruppe [Violated File Group] auf, die auf dem System nicht zulaessig ist." >> $EventNotification
 
 ################################ USER CONFIGURATION ################################
 
