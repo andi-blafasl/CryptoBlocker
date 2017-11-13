@@ -9,9 +9,9 @@ $fileGroupName = "CryptoBlockerGroup"
 $fileTemplateName = "CryptoBlockerTemplate"
 # set screening type to
 # Active screening: Do not allow users to save unathorized files
-#$fileTemplateType = "Active"
+$fileTemplateType = "Active"
 # Passive screening: Allow users to save unathorized files (use for monitoring)
-$fileTemplateType = "Passiv"
+#$fileTemplateType = "Passiv"
 
 # Write the email options to the temporary file - comment out the entire block if no email notification should be set
 $EmailNotification = $env:TEMP + "\tmpEmail001.tmp"
