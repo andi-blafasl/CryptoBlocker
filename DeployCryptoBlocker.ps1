@@ -206,9 +206,9 @@ $monitoredExtensions = @(ConvertFrom-Json20 $jsonStr | ForEach-Object { $_.filte
 # Process SkipList.txt
 Write-Host "`n####"
 Write-Host "Processing SkipList.."
-If (Test-Path .\SkipList.txt)
+If (Test-Path $PSScriptRoot\SkipList.txt)
 {
-    $Exclusions = Get-Content .\SkipList.txt | ForEach-Object { $_.Trim() }
+    $Exclusions = Get-Content $PSScriptRoot\SkipList.txt | ForEach-Object { $_.Trim() }
     $monitoredExtensions = $monitoredExtensions | Where-Object { $Exclusions -notcontains $_ }
 
 }
@@ -228,7 +228,7 @@ Else
 # entries before applying the list to your FSRM implementation.
 #
 '@
-    Set-Content -Path .\SkipList.txt -Value $emptyFile
+    Set-Content -Path $PSScriptRoot\SkipList.txt -Value $emptyFile
 }
 
 # Split the $monitoredExtensions array into fileGroups of less than 4kb to allow processing by filescrn.exe
