@@ -221,9 +221,9 @@ $monitoredExtensions = @(ConvertFrom-Json20 $jsonStr | ForEach-Object { $_.filte
 Write-Host "`n####"
 Write-Host "Processing SkipList.."
 ### move file from C:\Windows\System32 or whatever your relative path is to the directory of this script
-if (Test-Path .\ProtectList.txt)
+if (Test-Path .\SkipList.txt)
 {
-    Move-Item -Path .\ProtectList.txt -Destination $PSScriptRoot\ProtectList.txt -Force
+    Move-Item -Path .\SkipList.txt -Destination $PSScriptRoot\SkipList.txt -Force
 }
 
 If (Test-Path $PSScriptRoot\SkipList.txt)
