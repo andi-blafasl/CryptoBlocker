@@ -131,11 +131,11 @@ if ($majorVer -ge 6)
 {
     $checkFSRM = Get-WindowsFeature -Name FS-Resource-Manager
 
-    if ($minorVer -ge 2 -and $checkFSRM.Installed -ne "True")
+    if (($minorVer -ge 2 -or $majorVer -eq 10) -and $checkFSRM.Installed -ne "True")
     {
-        # Server 2012
+        # Server 2012 / 2016
         Write-Host "`n####"
-        Write-Host "FSRM not found.. Installing (2012).."
+        Write-Host "FSRM not found.. Installing (2012 / 2016).."
 
         $install = Install-WindowsFeature -Name FS-Resource-Manager -IncludeManagementTools
 	if ($? -ne $True)
@@ -179,11 +179,25 @@ else
 }
 
 ## Enumerate shares
-$drivesContainingShares =   @(Get-WmiObject Win32_Share | 
-                Select Name,Path,Type | 
-                Where-Object { $_.Type -match '0|2147483648' } | 
-                Select -ExpandProperty Path | 
-                Select -Unique)
+Write-Host "`n####"
+Write-Host "Processing ProtectList.."
+### move file from C:\Windows\System32 or whatever your relative path is to the directory of this script
+if (Test-Path .\ProtectList.txt)
+{
+    Move-Item -Path .\ProtectList.txt -Destination $PSScriptRoot\ProtectList.txt -Force
+}
+
+if (Test-Path $PSScriptRoot\ProtectList.txt)
+{
+    $drivesContainingShares = Get-Content $PSScriptRoot\ProtectList.txt | ForEach-Object { $_.Trim() }
+}
+Else {
+    $drivesContainingShares =   @(Get-WmiObject Win32_Share | 
+                    Select Name,Path,Type | 
+                    Where-Object { $_.Type -match '0|2147483648' } | 
+                    Select -ExpandProperty Path | 
+                    Select -Unique)
+}
 
 
 if ($drivesContainingShares.Count -eq 0)
@@ -206,6 +220,12 @@ $monitoredExtensions = @(ConvertFrom-Json20 $jsonStr | ForEach-Object { $_.filte
 # Process SkipList.txt
 Write-Host "`n####"
 Write-Host "Processing SkipList.."
+### move file from C:\Windows\System32 or whatever your relative path is to the directory of this script
+if (Test-Path .\ProtectList.txt)
+{
+    Move-Item -Path .\ProtectList.txt -Destination $PSScriptRoot\ProtectList.txt -Force
+}
+
 If (Test-Path $PSScriptRoot\SkipList.txt)
 {
     $Exclusions = Get-Content $PSScriptRoot\SkipList.txt | ForEach-Object { $_.Trim() }
@@ -229,6 +249,20 @@ Else
 #
 '@
     Set-Content -Path $PSScriptRoot\SkipList.txt -Value $emptyFile
+}
+
+# Check to see if we have any local patterns to include
+Write-Host "`n####"
+Write-Host "Processing IncludeList.."
+### move file from C:\Windows\System32 or whatever your relative path is to the directory of this script
+if (Test-Path .\IncludeList.txt)
+{
+    Move-Item -Path .\IncludeList.txt -Destination $PSScriptRoot\IncludeList.txt -Force
+}
+If (Test-Path $PSScriptRoot\IncludeList.txt)
+{
+    $includeExt = Get-Content $PSScriptRoot\IncludeList.txt | ForEach-Object { $_.Trim() }
+    $monitoredExtensions = $monitoredExtensions + $includeExt
 }
 
 # Split the $monitoredExtensions array into fileGroups of less than 4kb to allow processing by filescrn.exe
