@@ -304,6 +304,27 @@ $drivesContainingShares | ForEach-Object {
     &filescrn.exe Screen Add "/Path:$_" "/SourceTemplate:$fileTemplateName"
 }
 
+# Add Folder Exceptions from ExcludeList.txt
+Write-Host "`n####"
+Write-Host "Processing ExcludeList.."
+### move file from C:\Windows\System32 or whatever your relative path is to the directory of this script
+if (Test-Path .\ExcludePaths.txt)
+{
+    Move-Item -Path .\ExcludePaths.txt -Destination $PSScriptRoot\ExcludePaths.txt -Force
+}
+If (Test-Path $PSScriptRoot\ExcludePaths.txt) {
+    Get-Content $PSScriptRoot\ExcludePaths.txt | ForEach-Object {
+        If (Test-Path $_) {
+            # Build the argument list with all required fileGroups
+            $ExclusionArgs = 'Exception', 'Add', "/Path:$_"
+            ForEach ($group in $fileGroups) {
+                $ExclusionArgs += "/Add-Filegroup:$($group.fileGroupName)"
+            }
+            &filescrn.exe $ExclusionArgs
+        }
+    }
+}
+
 # Cleanup temporary files if they were created
 Write-Host "`n####"
 Write-Host "Cleaning up temporary stuff.."
