@@ -316,11 +316,13 @@ If (Test-Path $PSScriptRoot\ExcludePaths.txt) {
     Get-Content $PSScriptRoot\ExcludePaths.txt | ForEach-Object {
         If (Test-Path $_) {
             # Build the argument list with all required fileGroups
-            $ExclusionArgs = 'Exception', 'Add', "/Path:$_"
+            $ExclusionArgs = @()
             ForEach ($group in $fileGroups) {
                 $ExclusionArgs += "/Add-Filegroup:$($group.fileGroupName)"
             }
-            &filescrn.exe $ExclusionArgs
+            Write-Host "File Exeption for [$_] with Args [$ExclusionArgs].."
+            &filescrn.exe Exception Delete "/Path:$_" /Quiet
+            &filescrn.exe Exception Add "/Path:$_" $ExclusionArgs
         }
     }
 }
